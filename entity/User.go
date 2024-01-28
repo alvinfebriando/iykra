@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-type Customer struct {
+type User struct {
 	Id          uint      `gorm:"primaryKey;autoIncrement"`
 	Name        string    `gorm:"not null"`
 	Address     string    `gorm:"not null"`

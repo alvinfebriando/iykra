@@ -6,8 +6,8 @@ import (
 )
 
 func Migrate(db *gorm.DB) {
-	customer := &entity.Customer{}
+	user := &entity.User{}
 
-	_ = db.Migrator().DropTable(customer)
-	_ = db.AutoMigrate(customer)
+	_ = db.Migrator().DropTable(user)
+	_ = db.AutoMigrate(user)
 }
