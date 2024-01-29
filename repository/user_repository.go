@@ -13,6 +13,7 @@ import (
 type UserRepository interface {
 	Find(ctx context.Context, query *valueobject.Query) ([]*entity.User, error)
 	FindById(ctx context.Context, userId uint) (*entity.User, error)
+	FindByEmail(ctx context.Context, email string) (*entity.User, error)
 	Create(ctx context.Context, user *entity.User) (*entity.User, error)
 	Update(ctx context.Context, user *entity.User) (*entity.User, error)
 	Delete(ctx context.Context, user *entity.User) error
@@ -51,6 +52,24 @@ func (r *userRepository) FindById(ctx context.Context, userId uint) (*entity.Use
 
 	return user, nil
 }
+
+func (r *userRepository) FindByEmail(ctx context.Context, email string) (*entity.User, error) {
+	var user *entity.User
+	err := r.db.
+		WithContext(ctx).
+		Where("email = ?", email).
+		First(&user).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (r *userRepository) Create(ctx context.Context, user *entity.User) (*entity.User, error) {
 	err := r.db.WithContext(ctx).Create(user).Error
 	if err != nil {
