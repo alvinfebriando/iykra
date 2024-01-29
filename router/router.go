@@ -9,6 +9,7 @@ import (
 )
 
 type Handlers struct {
+	Auth     *handler.AuthHandler
 	Customer *handler.CustomerHandler
 }
 
@@ -17,8 +18,10 @@ func New(h Handlers) http.Handler {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Error())
 
+	r.POST("/auth/register", h.Auth.Register)
+	r.POST("/auth/login", h.Auth.Login)
+
 	r.GET("/customers", h.Customer.ListCustomer)
-	r.POST("/customers", h.Customer.AddCustomer)
 	r.PUT("/customers/:id", h.Customer.UpdateCustomer)
 	r.DELETE("/customers/:id", h.Customer.DeleteCustomer)
 
