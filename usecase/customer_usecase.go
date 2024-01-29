@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"github.com/alvinfebriando/costumer-test/entity"
 	"github.com/alvinfebriando/costumer-test/repository"
@@ -11,6 +12,7 @@ import (
 type CustomerUsecase interface {
 	GetAllCustomers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error)
 	AddCustomer(ctx context.Context, user *entity.User) (*entity.User, error)
+	UpdateCustomer(ctx context.Context, user *entity.User) (*entity.User, error)
 }
 
 type customerUsecase struct {
@@ -27,4 +29,24 @@ func (u *customerUsecase) GetAllCustomers(ctx context.Context, query *valueobjec
 
 func (u *customerUsecase) AddCustomer(ctx context.Context, user *entity.User) (*entity.User, error) {
 	return u.userRepo.Create(ctx, user)
+}
+func (u *customerUsecase) UpdateCustomer(ctx context.Context, user *entity.User) (*entity.User, error) {
+	fetchedCustomer, err := u.userRepo.FindById(ctx, user.Id)
+	if err != nil {
+		return nil, err
+	}
+	if fetchedCustomer == nil {
+		return nil, errors.New("no customer found")
+	}
+
+	fetchedCustomer.Name = user.Name
+	fetchedCustomer.Address = user.Address
+	fetchedCustomer.DateOfBirth = user.DateOfBirth
+
+	updatedCustomer, err := u.userRepo.Update(ctx, fetchedCustomer)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedCustomer, nil
 }

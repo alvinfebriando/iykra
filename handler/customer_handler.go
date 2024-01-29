@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/alvinfebriando/costumer-test/dto"
@@ -57,4 +58,38 @@ func (h *CustomerHandler) AddCustomer(c *gin.Context) {
 	c.JSON(http.StatusCreated, dto.Response{
 		Data: dto.NewResponseFromUser(createdCustomer),
 	})
+}
+
+func (h *CustomerHandler) UpdateCustomer(c *gin.Context) {
+	var customerId dto.RequestUri
+	var request dto.AddCustomerRequest
+
+	if err := c.ShouldBindUri(&customerId); err != nil {
+		log.Println(err)
+		_ = c.Error(err)
+		return
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	user, err := request.ToUser()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	user.Id = customerId.Id
+	updatedCustomer, err := h.customerUsecase.UpdateCustomer(c.Request.Context(), user)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.Response{
+		Data: dto.NewResponseFromUser(updatedCustomer),
+	})
+
 }
