@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/alvinfebriando/costumer-test/handler"
+	"github.com/alvinfebriando/costumer-test/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,7 @@ type Handlers struct {
 
 func New(h Handlers) http.Handler {
 	r := gin.New()
+	r.Use(middleware.Error())
 
 	r.GET("/customers", h.Customer.ListCustomer)
 
