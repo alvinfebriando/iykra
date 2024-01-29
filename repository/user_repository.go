@@ -29,7 +29,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepository) Find(ctx context.Context, query *valueobject.Query) ([]*entity.User, error) {
 	var users []*entity.User
-	q := r.db.Model(users).WithContext(ctx)
+	q := r.db.WithContext(ctx).Model(users)
 
 	if query.GetLimit() != nil {
 		limit := *query.GetLimit()
