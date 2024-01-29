@@ -13,6 +13,7 @@ type CustomerUsecase interface {
 	GetAllCustomers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error)
 	AddCustomer(ctx context.Context, user *entity.User) (*entity.User, error)
 	UpdateCustomer(ctx context.Context, user *entity.User) (*entity.User, error)
+	DeleteCustomer(ctx context.Context, userId uint) error
 }
 
 type customerUsecase struct {
@@ -49,4 +50,16 @@ func (u *customerUsecase) UpdateCustomer(ctx context.Context, user *entity.User)
 	}
 
 	return updatedCustomer, nil
+}
+func (u *customerUsecase) DeleteCustomer(ctx context.Context, userId uint) error {
+	fetchedCustomer, err := u.userRepo.FindById(ctx, userId)
+	if err != nil {
+		return err
+	}
+	if fetchedCustomer == nil {
+		return apperror.NewResourceNotFoundError("customer")
+	}
+
+	customer := &entity.User{Id: userId}
+	return u.userRepo.Delete(ctx, customer)
 }

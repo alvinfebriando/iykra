@@ -20,6 +20,7 @@ func New(h Handlers) http.Handler {
 	r.GET("/customers", h.Customer.ListCustomer)
 	r.POST("/customers", h.Customer.AddCustomer)
 	r.PUT("/customers/:id", h.Customer.UpdateCustomer)
+	r.DELETE("/customers/:id", h.Customer.DeleteCustomer)
 
 	return r
 }

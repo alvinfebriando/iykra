@@ -93,3 +93,20 @@ func (h *CustomerHandler) UpdateCustomer(c *gin.Context) {
 	})
 
 }
+
+func (h *CustomerHandler) DeleteCustomer(c *gin.Context) {
+	var customerId dto.RequestUri
+	if err := c.ShouldBindUri(&customerId); err != nil {
+		log.Println(err)
+		_ = c.Error(err)
+		return
+	}
+
+	err := h.customerUsecase.DeleteCustomer(c.Request.Context(), customerId.Id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusNoContent, nil)
+}
