@@ -11,5 +11,5 @@ type Response struct {
 }
 
 type RequestUri struct {
-	Id uint `form:"id" binding:"required,numeric"`
+	Id uint `uri:"id" binding:"required,numeric"`
 }
