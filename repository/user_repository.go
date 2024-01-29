@@ -29,7 +29,15 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepository) Find(ctx context.Context, query *valueobject.Query) ([]*entity.User, error) {
 	var users []*entity.User
-	err := r.db.WithContext(ctx).Find(&users).Error
+	q := r.db.Model(users).WithContext(ctx)
+
+	if query.GetLimit() != nil {
+		limit := *query.GetLimit()
+		offset := countOffset(query.GetPage(), limit)
+		q.Limit(limit).Offset(offset)
+	}
+
+	err := q.Order(query.GetOrder()).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
