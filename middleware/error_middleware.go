@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/alvinfebriando/costumer-test/apperror"
 	"github.com/alvinfebriando/costumer-test/dto"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -26,6 +27,13 @@ func Error() gin.HandlerFunc {
 		var sErr *json.SyntaxError
 		var uErr *json.UnmarshalTypeError
 		var vErr validator.ValidationErrors
+		var cErr *apperror.ClientError
+
+		isClientError := false
+		if errors.As(err, &cErr) {
+			isClientError = true
+			err = cErr.UnWrap()
+		}
 
 		switch {
 		case errors.Is(err, io.EOF):
@@ -42,6 +50,10 @@ func Error() gin.HandlerFunc {
 			})
 		case errors.As(err, &vErr):
 			c.AbortWithStatusJSON(http.StatusBadRequest, dto.Response{
+				Error: message,
+			})
+		case isClientError:
+			c.AbortWithStatusJSON(cErr.HttpStatusCode(), dto.Response{
 				Error: message,
 			})
 		default:

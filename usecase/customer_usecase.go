@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"context"
-	"errors"
 
+	"github.com/alvinfebriando/costumer-test/apperror"
 	"github.com/alvinfebriando/costumer-test/entity"
 	"github.com/alvinfebriando/costumer-test/repository"
 	"github.com/alvinfebriando/costumer-test/valueobject"
@@ -36,7 +36,7 @@ func (u *customerUsecase) UpdateCustomer(ctx context.Context, user *entity.User)
 		return nil, err
 	}
 	if fetchedCustomer == nil {
-		return nil, errors.New("no customer found")
+		return nil, apperror.NewResourceNotFoundError("customer")
 	}
 
 	fetchedCustomer.Name = user.Name
