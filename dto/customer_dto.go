@@ -53,6 +53,7 @@ func (r *AddCustomerRequest) ToUser() (*entity.User, error) {
 
 	return &entity.User{
 		Email:       r.Email,
+		Password:    r.Password,
 		Name:        r.Name,
 		Address:     r.Address,
 		DateOfBirth: dateOfBirth,
