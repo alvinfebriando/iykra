@@ -38,6 +38,7 @@ func (qp *ListCustomerQueryParam) ToQuery() *valueobject.Query {
 
 type AddCustomerRequest struct {
 	Email       string `json:"email" binding:"required,email"`
+	Password    string `json:"password" binding:"required"`
 	Name        string `json:"name" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	DateOfBirth string `json:"date_of_birth" binding:"required"`
