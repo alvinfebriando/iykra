@@ -37,6 +37,7 @@ func (qp *ListCustomerQueryParam) ToQuery() *valueobject.Query {
 }
 
 type AddCustomerRequest struct {
+	Email       string `json:"email" binding:"required,email"`
 	Name        string `json:"name" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	DateOfBirth string `json:"date_of_birth" binding:"required"`
@@ -50,6 +51,7 @@ func (r *AddCustomerRequest) ToUser() (*entity.User, error) {
 	}
 
 	return &entity.User{
+		Email:       r.Email,
 		Name:        r.Name,
 		Address:     r.Address,
 		DateOfBirth: dateOfBirth,
