@@ -10,6 +10,7 @@ import (
 
 type CustomerUsecase interface {
 	GetAllCustomers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error)
+	AddCustomer(ctx context.Context, user *entity.User) (*entity.User, error)
 }
 
 type customerUsecase struct {
@@ -22,4 +23,8 @@ func NewCustomerUsecase(userRepo repository.UserRepository) CustomerUsecase {
 
 func (u *customerUsecase) GetAllCustomers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error) {
 	return u.userRepo.Find(ctx, query)
+}
+
+func (u *customerUsecase) AddCustomer(ctx context.Context, user *entity.User) (*entity.User, error) {
+	return u.userRepo.Create(ctx, user)
 }

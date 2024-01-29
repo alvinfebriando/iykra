@@ -32,3 +32,25 @@ func (h *CustomerHandler) ListCustomer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, fetchedCustomers)
 }
+
+func (h *CustomerHandler) AddCustomer(c *gin.Context) {
+	var request dto.AddCustomerRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	user, err := request.ToUser()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	createdCustomer, err := h.customerUsecase.AddCustomer(c.Request.Context(), user)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, createdCustomer)
+}
