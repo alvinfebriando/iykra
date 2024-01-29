@@ -30,7 +30,9 @@ func (h *CustomerHandler) ListCustomer(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, fetchedCustomers)
+	c.JSON(http.StatusOK, dto.Response{
+		Data: dto.NewResponsesFromUsers(fetchedCustomers),
+	})
 }
 
 func (h *CustomerHandler) AddCustomer(c *gin.Context) {
@@ -52,5 +54,7 @@ func (h *CustomerHandler) AddCustomer(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, createdCustomer)
+	c.JSON(http.StatusCreated, dto.Response{
+		Data: dto.NewResponseFromUser(createdCustomer),
+	})
 }

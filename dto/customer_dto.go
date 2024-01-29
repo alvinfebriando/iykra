@@ -55,3 +55,24 @@ func (r *AddCustomerRequest) ToUser() (*entity.User, error) {
 		DateOfBirth: dateOfBirth,
 	}, nil
 }
+
+type UserResponse struct {
+	Id          uint   `json:"id"`
+	Name        string `json:"name"`
+	Address     string `json:"address"`
+	DateOfBirth string `json:"date_of_birth"`
+}
+
+func NewResponseFromUser(u *entity.User) *UserResponse {
+	const timeFormat = "2006-01-02"
+	return &UserResponse{
+		Id:          u.Id,
+		Name:        u.Name,
+		Address:     u.Address,
+		DateOfBirth: u.DateOfBirth.Format(timeFormat),
+	}
+}
+
+func NewResponsesFromUsers(us []*entity.User) []*UserResponse {
+	return mapEntitiesToResponses(us, NewResponseFromUser)
+}
